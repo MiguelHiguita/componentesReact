@@ -1,13 +1,41 @@
 import userLogo from '../../../assets/img.jpg'
 import {useState} from "react";
+import {usuarios} from "../../database/dataBase"
+import Swal from 'sweetalert2';
+
+
 
 const Login = () => {
     const [getUsuario, setUsuario] = useState("");
     const [getContraseña, setContraseña] = useState("");
     const [getCorreo, setCorreo] = useState("");
-    if(getUsuario==="miguel" & getContraseña==="1234" & getCorreo==="miguel@gmail.com"){
-        alert("Usuario correcto")
+    
+    const buscarUsuario = () => {
+      let estado = usuarios.some((usuario)=>{
+      if(getUsuario === usuario.usuario && getContraseña === usuario.contrasena && getCorreo === usuario.correo){
+        return true
+      }
+      })
+      return estado
     }
+
+    const iniciarSesion = () =>{
+      if(buscarUsuario()){
+        Swal.fire({
+          title: "Acceso correcto",
+          text: "Bienvenido",
+          icon: "success"
+        });
+      }else{
+        Swal.fire({
+          icon: "error",
+          title: "Error",
+          text: "Acceso incorrecto",
+          footer: '<a href="#">¿Por que tengo este problema?</a>'
+        });
+      }
+    }
+
     return (
         <form className="login-form">
         <img src={userLogo} alt="Usuario" />
@@ -24,7 +52,7 @@ const Login = () => {
         </div>
         <div className="input-group">
           <label htmlFor="password">Contraseña:</label>
-          <input type="text" 
+          <input type="password" 
             required 
             onChange={(e) => {
                 setContraseña(e.target.value);
@@ -40,7 +68,7 @@ const Login = () => {
                 }}
             />
         </div>
-        <button type="submit">Iniciar sesión</button>
+        <button onClick={iniciarSesion} type="button">Iniciar sesión</button>
       </form>
   );
 }
